@@ -18,5 +18,6 @@ require 'test_bench'; TestBench.activate
 require 'pp'
 require 'transform'
 
-include ErrorData
 require 'error_data/controls'
+
+Controls = ErrorData::Controls

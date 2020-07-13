@@ -1,14 +1,31 @@
 class ErrorData
   module Controls
     module ErrorData
-      def self.example
-        error_data = ::ErrorData.new
-        error_data.class_name = Controls::Error.class_name
-        error_data.message = Controls::Error.message
+      def self.example(class_name: nil, message: nil, backtrace: nil)
+        class_name ||= self.class_name
+        message ||= self.message
+        backtrace ||= self.backtrace
 
-        error_data.backtrace = Backtrace.example
+        error_data = ::ErrorData.new
+
+        error_data.class_name = class_name
+        error_data.message = message
+
+        error_data.backtrace = backtrace
 
         error_data
+      end
+
+      def self.class_name
+        Controls::Error.class_name
+      end
+
+      def self.message
+        Controls::Error.message
+      end
+
+      def self.backtrace
+        Backtrace.example
       end
 
       module Backtrace
@@ -17,6 +34,14 @@ class ErrorData
             b << Frames::First.example
             b << Frames::Second.example
             b << Frames::Third.example
+          end
+        end
+
+        def self.other_example
+          ::ErrorData::Backtrace.build.tap do |b|
+            b << Frames::First.example
+            b << Frames::Third.example
+            b << Frames::Second.example
           end
         end
 

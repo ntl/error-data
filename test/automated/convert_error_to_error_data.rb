@@ -1,7 +1,13 @@
-require_relative 'bench_init'
+require_relative './automated_init'
 
-test "Convert Error to ErrorData" do
+context "Convert Error to ErrorData" do
   error = ErrorData::Controls::Error.example
+
   error_data = ErrorData::Convert::Error.(error)
-  error_data.correspond? error
+
+  corresponds = error_data.correspond?(error)
+
+  test do
+    assert(corresponds)
+  end
 end

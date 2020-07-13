@@ -29,15 +29,6 @@ class ErrorData
     error_corresponds && backtrace_corresponds
   end
 
-  def ==(other)
-    return false if self.class != other.class
-
-    this_hash = Serialize::Write.raw_data self
-    other_hash = Serialize::Write.raw_data other
-
-    this_hash == other_hash
-  end
-
   def to_h
     data = attributes
     data[:backtrace] = backtrace.to_a

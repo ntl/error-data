@@ -3,11 +3,7 @@ class ErrorData
 
   attribute :class_name, String
   attribute :message, String
-  attribute :backtrace, Backtrace
-
-  def backtrace
-    @backtrace ||= Backtrace.new
-  end
+  attribute :backtrace, Backtrace, default: ->{ Backtrace.new }
 
   def transform_write(data)
     backtrace = data.delete(:backtrace)
@@ -18,11 +14,15 @@ class ErrorData
   end
 
   def transform_read(data)
-    backtrace_data = data.delete(:backtrace)
+    backtrace = data.delete(:backtrace)
 
-    backtrace = Backtrace.build(:frames => backtrace_data)
+    return if backtrace.nil?
 
-    data[:backtrace] = backtrace
+    backtrace.each do |frame_data|
+      frame = Backtrace::Frame.build(frame_data)
+
+      self.backtrace.add_frame(frame)
+    end
   end
 
   def set_backtrace(backtrace)

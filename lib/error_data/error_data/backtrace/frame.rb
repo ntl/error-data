@@ -18,15 +18,9 @@ class ErrorData
       def self.parse(frame_text)
         filename, line_number, method_name = frame_text.split(':')
 
-        if !line_number.nil?
-          line_number = Integer(line_number)
-        end
+        line_number = Integer(line_number)
 
-        if !method_name.nil?
-          method_name = method_name.gsub(/^in `(.*?)'$/, "\\1")
-        else
-          method_name = '(none)'
-        end
+        method_name.gsub!(/^in `(.*?)'$/, "\\1")
 
         build({
           :filename => filename,

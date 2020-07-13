@@ -2,16 +2,17 @@ class ErrorData
   class Backtrace
     include Schema::DataStructure
 
-    def frames
-      @frames ||= []
-    end
+    attribute :frames, Array, default: ->{ Array.new }
 
-    def self.build(data=nil)
-      data ||= {}
-      new.tap do |instance|
-        data.each do |frame|
-          instance.frames << Frame.build(frame)
-        end
+    def transform_read(data)
+      frames = data.delete(:frames)
+
+      frames = Array(frames)
+
+      frames.each do |frame_data|
+        frame = Frame.build(frame_data)
+
+        add_frame(frame)
       end
     end
 

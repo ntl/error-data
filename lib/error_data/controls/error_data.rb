@@ -30,7 +30,7 @@ class ErrorData
 
       module Backtrace
         def self.example
-          ::ErrorData::Backtrace.build.tap do |b|
+          ::ErrorData::Backtrace.new.tap do |b|
             b << Frames::First.example
             b << Frames::Second.example
             b << Frames::Third.example
@@ -38,7 +38,7 @@ class ErrorData
         end
 
         def self.other_example
-          ::ErrorData::Backtrace.build.tap do |b|
+          ::ErrorData::Backtrace.new.tap do |b|
             b << Frames::First.example
             b << Frames::Third.example
             b << Frames::Second.example

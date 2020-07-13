@@ -9,10 +9,20 @@ class ErrorData
     @backtrace ||= Backtrace.new
   end
 
-  def self.build(data=nil)
-    instance = super
-    instance.backtrace = Backtrace.build(instance.backtrace)
-    instance
+  def transform_write(data)
+    backtrace = data.delete(:backtrace)
+
+    backtrace_data = backtrace.to_a
+
+    data[:backtrace] = backtrace_data
+  end
+
+  def transform_read(data)
+    backtrace_data = data.delete(:backtrace)
+
+    backtrace = Backtrace.build(:frames => backtrace_data)
+
+    data[:backtrace] = backtrace
   end
 
   def set_backtrace(backtrace)
@@ -29,32 +39,26 @@ class ErrorData
     error_corresponds && backtrace_corresponds
   end
 
-  def to_h
-    data = attributes
-    data[:backtrace] = backtrace.to_a
-    data
-  end
-
-  module Serializer
+  module Transform
     def self.json
       JSON
+    end
+
+    def self.raw_data(instance)
+      instance.attributes
     end
 
     def self.instance(raw_data)
       ErrorData.build(raw_data)
     end
 
-    def self.raw_data(instance)
-      instance.to_h
-    end
-
     module JSON
-      def self.deserialize(text)
-        formatted_data = ::JSON.parse(text)
+      def self.read(text)
+        formatted_data = ::JSON.parse(text, symbolize_names: true)
         Casing::Underscore.(formatted_data)
       end
 
-      def self.serialize(raw_data)
+      def self.write(raw_data)
         formatted_data = Casing::Camel.(raw_data)
         ::JSON.generate(formatted_data)
       end

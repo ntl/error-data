@@ -1,13 +1,13 @@
 require_relative './automated_init'
 
 context "Error Data Deserialization" do
+  control_error_data = ErrorData::Controls::ErrorData.example
+
+  json_text = ErrorData::Controls::ErrorData::JSON.text
+
+  error_data = Transform::Read.(json_text, :json, control_error_data.class)
+
   test "Converts from JSON text" do
-    compare_error_data = ErrorData::Controls::ErrorData.example
-
-    json_text = ErrorData::Controls::ErrorData::JSON.text
-
-    error_data = Serialize::Read.(json_text, compare_error_data.class, :json)
-
-    assert(error_data == compare_error_data)
+    assert(error_data == control_error_data)
   end
 end

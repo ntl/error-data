@@ -8,12 +8,15 @@ else
 end
 
 ENV['LOGGER'] ||= 'off'
+ENV['LOG_OPTIONAL'] ||= 'on'
 
 puts RUBY_DESCRIPTION
 
 require_relative '../init.rb'
 
-require 'error_data/controls'
-require 'serialize'
+require 'test_bench'; TestBench.activate
+require 'pp'
+require 'transform'
 
-Telemetry::Logger::AdHoc.activate
+include ErrorData
+require 'error_data/controls'
